@@ -129,11 +129,14 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
+  pages: {
+    signIn: "/login",
+  }
 };
 
-const handler = NextAuth(authOptions)
+// const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+// export { handler as GET, handler as POST }
 
 /**
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.

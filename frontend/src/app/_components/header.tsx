@@ -16,6 +16,8 @@ import {
   ShoppingCart,
   Users2,
 } from "lucide-react"
+import { signOut } from "next-auth/react"
+
 import { Button } from "~/components/ui/button"
 import {
   DropdownMenu,
@@ -103,7 +105,7 @@ export default function Header() {
               placeholder="Search..."
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             /> */}
-            <a className="text-blue-400 underline" href={`/${session?.data?.user.id}/chat`} target="__blank">Your Public Link</a>
+            {(session.data as any).user.orgName}: <a className="text-blue-400 underline" href={`/orgs/${session?.data?.user.id}`} target="__blank">Your Public Link</a>
           </div>
           <div className="ml-auto"></div>
           <DropdownMenu>
@@ -125,7 +127,15 @@ export default function Header() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() =>{
+                  signOut({
+                    callbackUrl: "/login"
+                  })}
+                }
+              >
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

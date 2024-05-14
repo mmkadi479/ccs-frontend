@@ -3,12 +3,24 @@ import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { useParams, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { sendChat } from "~/server/actions/chats"
+import { getOrg, publicOrg } from "~/server/actions/orgs"
+import { getProduct, Product } from "~/server/actions/products"
+import { 
+  Card,
+  CardHeader,
+  CardDescription, 
+  CardTitle,
+  CardContent,
+  CardFooter
+} from "~/components/ui/card"
 
 export default function CustomerSideChat({
+  roomInfo,
   messages
 } : {
+  roomInfo: any,
   messages: any[]
 }) {
   const [loading, setLoading] = useState(false)
@@ -28,6 +40,10 @@ export default function CustomerSideChat({
       setLoading(false)
     }
   }
+
+  console.log('roomInfo', roomInfo);
+  
+
   return (
     <>
       <header className="flex items-center justify-between bg-gray-900 px-4 py-3 text-white shadow-md">
@@ -37,10 +53,22 @@ export default function CustomerSideChat({
         </div>
         <div className="flex items-center">
           <MountainIcon className="mr-2 h-6 w-6" />
-          <span className="text-sm">Acme Inc</span>
+          <span className="text-sm">{roomInfo.orgUser.orgName}</span>
         </div>
       </header>
       <main className="flex-1 bg-gray-100 dark:bg-gray-800 p-4">
+        {
+          roomInfo.product &&
+          <Card className="mb-4 w-[350px] flex flex-col justify-between">
+            <CardHeader>
+              <CardTitle>{roomInfo.product.name}</CardTitle>
+              <CardDescription>{Number(roomInfo.product.price).toLocaleString()}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{roomInfo.product.description}</p>
+            </CardContent>
+          </Card>
+        }
         <div className="h-[500px] overflow-y-auto rounded-lg bg-white p-4 shadow-md dark:bg-gray-950">
           <div className="flex flex-col gap-4">
             {
@@ -54,54 +82,35 @@ export default function CustomerSideChat({
                 </div>
               ))
             }
-            {/* <div className="flex items-start gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage alt="Customer Avatar" src="/placeholder-avatar.jpg" />
-              <AvatarFallback>AG</AvatarFallback>
-            </Avatar>
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 max-w-[70%]">
-                <p className="text-sm">
-                  Hello, how can I assist you today? I'm here to help with any questions or issues you may have.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 justify-end">
-              <div className="bg-gray-900 text-white rounded-lg p-3 max-w-[70%]">
-                <p className="text-sm">
-                Hi there, I'm having an issue with my order.
-                </p>
-              </div>
-              <Avatar className="h-10 w-10">
-                <AvatarImage alt="Customer Avatar" src="/placeholder-avatar.jpg" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-            </div> */}
           </div>
         </div>
       </main>
-      <footer className="bg-gray-100 dark:bg-gray-800 px-4 py-3 shadow-md">
-        <form className="flex items-center gap-2">
-          <Input
-            className="flex-1 rounded-lg bg-white px-4 py-2 text-sm shadow-sm dark:bg-gray-950 dark:text-gray-300"
-            placeholder="Type your message..."
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button 
-            type="submit" 
-            className={`${loading ? 'bg-grey-300' : ''}`} 
-            onClick={(e) => {
-              e.preventDefault()
-              sendMessage()
-            }} 
-            variant="default" 
-            disabled={loading}
-          >
-            Send {loading && 'ing...'}
-          </Button>
-        </form>
-      </footer>
+      {
+        roomInfo.status.toUpperCase() === 'OPEN' &&
+        <footer className="bg-gray-100 dark:bg-gray-800 px-4 py-3 shadow-md">
+          <form className="flex items-center gap-2">
+            <Input
+              className="flex-1 rounded-lg bg-white px-4 py-2 text-sm shadow-sm dark:bg-gray-950 dark:text-gray-300"
+              placeholder="Type your message..."
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <Button 
+              type="submit" 
+              className={`${loading ? 'bg-grey-300' : ''}`} 
+              onClick={(e) => {
+                e.preventDefault()
+                sendMessage()
+              }} 
+              variant="default" 
+              disabled={loading}
+            >
+              Send {loading && 'ing...'}
+            </Button>
+          </form>
+        </footer>
+      }
     </>
   )
 }

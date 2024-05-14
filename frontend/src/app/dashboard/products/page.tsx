@@ -55,38 +55,8 @@ export default async function Products() {
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="active">Active</TabsTrigger>
                 <TabsTrigger value="inactive">Inactive</TabsTrigger>
-                {/* <TabsTrigger value="archived" className="hidden sm:flex">
-                  Archived
-                </TabsTrigger> */}
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                {/* <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8 gap-1">
-                      <ListFilter className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Filter
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem checked>
-                      Active
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Inactive</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
-                      Archived
-                    </DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu> */}
-                {/* <Button size="sm" variant="outline" className="h-8 gap-1">
-                  <File className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Export
-                  </span>
-                </Button> */}
                 <Link href="/dashboard/products/new">
                     <Button size="sm" className="h-8 gap-1">
                     <PlusCircle className="h-3.5 w-3.5" />
@@ -106,73 +76,59 @@ export default async function Products() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {
-                    products.length > 0 ? (
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableHeader>Name</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                            <TableHeader>Price</TableHeader>
-                            <TableHeader>Status</TableHeader>
-                            <TableHeader>Action</TableHeader>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {products.map((product) => (
-                            <TableRow key={product.id}>
-                              <TableCell>{product.name}</TableCell>
-                              <TableCell>{product.description}</TableCell>
-                              <TableCell>{product.price}</TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    product.status === "ACTIVE"
-                                      ? "secondary"
-                                      : "destructive"
-                                  }
-                                >
-                                  {product.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="h-8 gap-1"
-                                    >
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        More
-                                      </span>
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    ) : (
-                      <div className="flex items-center justify-center h-40">
-                        <p className="text-sm text-muted-foreground">
-                          No products found
-                        </p>
-                      </div>
-                    )
-                  }
+                <Table>
+                  <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {products.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.description}</TableCell>
+                        <TableCell>{product.price}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              product.status === "ACTIVE"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                          >
+                            {product.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 gap-1"
+                              >
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                  More
+                                </span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>Edit</DropdownMenuItem>
+                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
                 </CardContent>
                 <CardFooter>
-                  {/* <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -185,73 +141,59 @@ export default async function Products() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {
-                    activeProducts.length > 0 ? (
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableHeader>Name</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                            <TableHeader>Price</TableHeader>
-                            <TableHeader>Status</TableHeader>
-                            <TableHeader>Action</TableHeader>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {activeProducts.map((product) => (
-                            <TableRow key={product.id}>
-                              <TableCell>{product.name}</TableCell>
-                              <TableCell>{product.description}</TableCell>
-                              <TableCell>{product.price}</TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    product.status === "ACTIVE"
-                                      ? "secondary"
-                                      : "destructive"
-                                  }
-                                >
-                                  {product.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="h-8 gap-1"
-                                    >
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        More
-                                      </span>
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    ) : (
-                      <div className="flex items-center justify-center h-40">
-                        <p className="text-sm text-muted-foreground">
-                          No products found
-                        </p>
-                      </div>
-                    )
-                  }
+                <Table>
+                  <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {activeProducts.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.description}</TableCell>
+                        <TableCell>{product.price}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              product.status === "ACTIVE"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                          >
+                            {product.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 gap-1"
+                              >
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                  More
+                                </span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>Edit</DropdownMenuItem>
+                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
                 </CardContent>
                 <CardFooter>
-                  {/* <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -264,73 +206,59 @@ export default async function Products() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {
-                    inactiveProducts.length > 0 ? (
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableHeader>Name</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                            <TableHeader>Price</TableHeader>
-                            <TableHeader>Status</TableHeader>
-                            <TableHeader>Action</TableHeader>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {inactiveProducts.map((product) => (
-                            <TableRow key={product.id}>
-                              <TableCell>{product.name}</TableCell>
-                              <TableCell>{product.description}</TableCell>
-                              <TableCell>{product.price}</TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant={
-                                    product.status === "ACTIVE"
-                                      ? "secondary"
-                                      : "destructive"
-                                  }
-                                >
-                                  {product.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="h-8 gap-1"
-                                    >
-                                      <MoreHorizontal className="h-3.5 w-3.5" />
-                                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                        More
-                                      </span>
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    ) : (
-                      <div className="flex items-center justify-center h-40">
-                        <p className="text-sm text-muted-foreground">
-                          No products found
-                        </p>
-                      </div>
-                    )
-                  }
+                <Table>
+                  <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inactiveProducts.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell>{product.description}</TableCell>
+                        <TableCell>{product.price}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              product.status === "ACTIVE"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                          >
+                            {product.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 gap-1"
+                              >
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                  More
+                                </span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>Edit</DropdownMenuItem>
+                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
                 </CardContent>
                 <CardFooter>
-                  {/* <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>

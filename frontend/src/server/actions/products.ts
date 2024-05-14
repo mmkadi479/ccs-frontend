@@ -2,24 +2,89 @@
 
 import { env } from "~/env"
 import { getServerAuthSession } from "../auth"
+import { revalidatePath, revalidateTag } from "next/cache"
+import { DATA_TAGS } from "~/lib/constants"
 
 const BASE_URL = env.API_URL
 
 export interface Product {
+  id?: string
   name: string 
   description: string 
   price: string
-  status: string
+  status: 'ACTIVE' | 'INACTIVE'
 }
 
-export async function getProducts() {
+export async function getProduct(client_side: boolean = false, productId: number, orgId?: number) {
+  if (client_side) {
+    const res = await fetch(`${BASE_URL}${orgId}/products/${productId}`, {
+      next: { tags: [DATA_TAGS.products] },
+    })
+
+    if (res.status === 404) {
+      return null
+    }
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch products')
+    }
+
+    const product: Product = await res.json()
+
+    return product
+  }
+
   const session = await getServerAuthSession()
 
   if (!session) {
     throw new Error('Unauthorized')
   }
 
-  const res = await fetch(`${BASE_URL}${session.user.id}/products`)
+  const res = await fetch(`${BASE_URL}${session.user.id}/products/${productId}`, {
+    next: { tags: [DATA_TAGS.products] },
+  })
+
+  if (res.status === 404) {
+    return null
+  }
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch products')
+  }
+
+  const product: Product = await res.json()
+
+  return product
+}
+
+export async function getProducts(client_side: boolean = false, orgId?: number) {
+  if (client_side) {
+    const res = await fetch(`${BASE_URL}${orgId}/products`, {
+      next: { tags: [DATA_TAGS.products] },
+    })
+
+    if (res.status === 404) {
+      return []
+    }
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch products')
+    }
+
+    const products: any[] = await res.json()
+
+    return products.filter((product) => product.status === 'ACTIVE')
+  }
+
+  const session = await getServerAuthSession()
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  const res = await fetch(`${BASE_URL}${session.user.id}/products`, {
+    next: { tags: [DATA_TAGS.products] },
+  })
 
   if (res.status === 404) {
     return []
@@ -41,7 +106,9 @@ export async function getActiveProducts() {
     throw new Error('Unauthorized')
   }
 
-  const res = await fetch(`${BASE_URL}${session.user.id}/products?status=ACTIVE`)
+  const res = await fetch(`${BASE_URL}${session.user.id}/products?status=ACTIVE`, {
+    next: { tags: [DATA_TAGS.active_products] },
+  })
 
   if (res.status === 404) {
     return []
@@ -63,7 +130,9 @@ export async function getInActiveProducts() {
     throw new Error('Unauthorized')
   }
 
-  const res = await fetch(`${BASE_URL}${session.user.id}/products?status=INACTIVE`)
+  const res = await fetch(`${BASE_URL}${session.user.id}/products?status=INACTIVE`, {
+    next: { tags: [DATA_TAGS.inactive_products] },
+  })
 
   if (res.status === 404) {
     return []
@@ -101,6 +170,12 @@ export async function addProduct(product: Product) {
   if (!res.ok) {
     throw new Error('Failed to add product')
   }
+
+  revalidatePath(`/${session.user.id}/dashboard/products`)
+  revalidatePath(`/${session.user.id}`)
+  revalidateTag(DATA_TAGS.products)
+  revalidateTag(DATA_TAGS.active_products)
+  revalidateTag(DATA_TAGS.inactive_products)
 
   const addedProduct: any = await res.json()
 

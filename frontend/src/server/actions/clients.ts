@@ -2,11 +2,15 @@
 
 import { env } from "~/env"
 import { getServerAuthSession } from "../auth"
+import { DATA_TAGS } from "~/lib/constants"
+import { revalidateTag } from "next/cache"
 
 const BASE_URL = env.API_URL
 
 export async function getOrCreateClient(name: string, email: string) {
-  const res = await fetch(`${BASE_URL}clients/${email}`)  
+  const res = await fetch(`${BASE_URL}clients/${email}`, {
+    next: { tags: [DATA_TAGS.client] }
+  })  
 
   if (res.status === 404) {
     return createClient(name, email)
@@ -44,13 +48,18 @@ export async function createClient(name: string, email: string) {
     throw new Error('Failed to create client')
   }
 
+  revalidateTag(DATA_TAGS.client)
+  revalidateTag(DATA_TAGS.clients)
+
   const client = await res.json()
 
   return client
 }
 
 export async function getClient(email: string) {
-  const res = await fetch(`${BASE_URL}clients/${email}`)  
+  const res = await fetch(`${BASE_URL}clients/${email}`, {
+    next: { tags: [DATA_TAGS.client] }
+  })  
   
   if (!res.ok) {
     throw new Error('Failed to fetch client')
@@ -71,7 +80,9 @@ export async function getClients() {
     throw new Error('Unauthorized')
   }
 
-  const res = await fetch(`${BASE_URL}${session.user.id}/clients`)
+  const res = await fetch(`${BASE_URL}${session.user.id}/clients`, {
+    next: { tags: [DATA_TAGS.clients] }
+  })
 
   console.log('Failed to fetch clients', res.status);
 

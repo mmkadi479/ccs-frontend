@@ -72,7 +72,7 @@ export default function LoginForm() {
             </div>
             <Input id="password" type="password" name="password" required />
           </div>
-          <Button type="submit" className={`w-full ${loading ? 'bg-gray-300' : ''}`} disabled={loading}>
+          <Button type="submit" className={`w-full ${loading ? 'w-full bg-gray-300 cursor-not-allowed hover:bg-gray-300 shadow-none text-gray-800 hover:text-gray-800' : ''}`} disabled={loading}>
             Login {loading && "..."}
           </Button>
           {/* <Button variant="outline" className="w-full">

@@ -33,7 +33,7 @@ export default async function ChatsPage() {
           {
             chats.length > 0 ? chats.map(chat => (
               <Link href={`/dashboard/chats/${chat.id}?client_email=${chat.client.email}&client_name=${chat.client.name}`} key={chat.id}>
-                <div className="grid grid-cols-[40px_1fr_100px] items-center gap-4 bg-white dark:bg-gray-950 p-4 rounded-md shadow-sm">
+                <div className="grid grid-cols-[40px_1fr_100px] items-center gap-4 mb-2 bg-white dark:bg-gray-950 p-4 rounded-md shadow-sm">
                   <Avatar className="w-10 h-10 bg-gray-200 dark:bg-gray-800">
                     <AvatarImage alt="Avatar" src={chat.avatar} />
                     <AvatarFallback>{chat.client.name[0]}</AvatarFallback>

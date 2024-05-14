@@ -20,7 +20,7 @@ export default function StartChat({
     setLoading(true)
     try {
       const chat = await createRoom(params.oem_id, client.email)
-      router.push(`/${params.oem_id}/chat/${chat.id}?email=${client.email}`)
+      router.push(`/orgs/${params.oem_id}/chat/${chat.id}?email=${client.email}`)
     } catch (error) {
       setError('An error occured. Please try again')
       console.error(error)

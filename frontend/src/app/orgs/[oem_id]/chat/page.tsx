@@ -17,8 +17,14 @@ export default async function ChatWithOEM({
 }) {
 
   const email = searchParams['email']
+  const productId = searchParams['product']
 
   if (email) {
+    if (productId) {
+      const room = await createRoom(params.oem_id, email, Number(productId))
+      return redirect(`/orgs/${params.oem_id}/chat/${room.id}?email=${email}`)
+    }
+    
     const client = await getClient(email)
     const chats: any[] = await getClientChats(params.oem_id, client.email)
 
@@ -29,8 +35,8 @@ export default async function ChatWithOEM({
         <StartChat params={params} client={client} />
       {
         chats.length > 0 ? chats.map(chat => (
-          <Link href={`/${params.oem_id}/chat/${chat.id}?email=${client.email}`} key={chat.id}>
-            <div className="grid grid-cols-[40px_1fr_100px] items-center gap-4 bg-white dark:bg-gray-950 p-4 rounded-md shadow-sm">
+          <Link href={`/orgs/${params.oem_id}/chat/${chat.id}?email=${client.email}`} key={chat.id}>
+            <div className="grid grid-cols-[40px_1fr_100px] items-center gap-4 mb-2 bg-white dark:bg-gray-950 p-4 rounded-md shadow-sm">
               <Avatar className="w-10 h-10 bg-gray-200 dark:bg-gray-800">
                 <AvatarImage alt="Avatar" src={chat.avatar} />
                 <AvatarFallback>{chat.client.name[0]}</AvatarFallback>

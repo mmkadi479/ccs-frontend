@@ -1,10 +1,18 @@
 import { AvatarImage, AvatarFallback, Avatar } from "~/components/ui/avatar"
 import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
-import { getChat } from "~/server/actions/chats"
+import { getChat, getChatInfo } from "~/server/actions/chats"
 import { getServerSession } from "next-auth"
 import { getServerAuthSession } from "~/server/auth"
 import OrgSendMessage from "~/app/_components/org-send-message"
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from "~/components/ui/card"
+import ResolveChat from "~/app/_components/resolve-chat"
 
 export default async function Component({
   params,
@@ -37,6 +45,7 @@ export default async function Component({
   const client_email = searchParams.client_email
   // console.log('client_name', client_name);   
 
+  const roomInfo = await getChatInfo(session?.user.id as number, parseInt(params.id))
   const messages = await getChat(session?.user.id as number, parseInt(params.id))
 
   console.log('messages', messages);
@@ -44,7 +53,19 @@ export default async function Component({
 
   return (
     <div className="flex h-screen w-full flex-col">
-      <header className="flex items-center gap-4 border-b bg-gray-100/40 px-6 py-3 dark:bg-gray-800/40">
+        {
+          roomInfo.product &&
+          <Card className="m-4 w-[350px] flex flex-col justify-between">
+            <CardHeader>
+              <CardTitle>{roomInfo.product.name}</CardTitle>
+              <CardDescription>{Number(roomInfo.product.price).toLocaleString()}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{roomInfo.product.description}</p>
+            </CardContent>
+          </Card>
+        }
+      <header className="flex items-center justify-between gap-4 border-b bg-gray-100/40 px-6 py-3 dark:bg-gray-800/40">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage alt="Customer Avatar" src="/placeholder-avatar.jpg" />
@@ -55,6 +76,12 @@ export default async function Component({
             <div className="text-gray-500 dark:text-gray-400">Customer</div>
           </div>
         </div>
+        {
+          roomInfo.status.toUpperCase() == 'OPEN' &&
+          <div className="flex items-center gap-2">
+            <ResolveChat room={roomInfo} />
+          </div>
+        }
       </header>
       <main className="flex-1 overflow-auto p-4">
         <div className="grid gap-4">
@@ -69,9 +96,12 @@ export default async function Component({
           }
         </div>
       </main>
-      <footer className="flex items-center gap-2 border-t bg-gray-100/40 px-6 py-3 dark:bg-gray-800/40">
-        <OrgSendMessage orgId={session.user.id} roomId={params.id} />
-      </footer>
+      {
+        roomInfo.status.toUpperCase() == 'OPEN' &&
+        <footer className="flex items-center gap-2 border-t bg-gray-100/40 px-6 py-3 dark:bg-gray-800/40">
+          <OrgSendMessage orgId={session.user.id} roomId={params.id} />
+        </footer>
+      }
     </div>
   )
 }
