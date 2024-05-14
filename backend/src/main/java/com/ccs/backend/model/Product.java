@@ -1,5 +1,9 @@
 package com.ccs.backend.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +28,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name="org_id", nullable = false)
     private User orgUser;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<ComplaintRoom> complaintRooms;
 
     public Product() {
     }
@@ -77,6 +85,10 @@ public class Product {
 
     public User getOrgUser() {
         return orgUser;
+    }
+
+    public List<ComplaintRoom> getComplaintRooms() {
+        return complaintRooms;
     }
 
     @Override

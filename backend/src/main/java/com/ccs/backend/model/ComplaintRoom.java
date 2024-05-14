@@ -22,12 +22,15 @@ public class ComplaintRoom {
 
   @ManyToOne
   @JoinColumn(name = "org_user_id", nullable = false)
-  @JsonIgnore
   private User orgUser;
 
   @OneToMany(mappedBy = "complaintRoom")
   @JsonIgnore
   private List<ComplaintMessage> messages;
+
+  @ManyToOne
+  @JoinColumn(name = "product_id", nullable = true)
+  private Product product;
 
   public ComplaintRoom() {
 
@@ -57,6 +60,14 @@ public class ComplaintRoom {
 
   public Client getClient() {
     return client;
+  }
+
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
   }
 
   public List<ComplaintMessage> getMessages() {

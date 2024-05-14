@@ -24,6 +24,9 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "org_name")
+    private String orgName;
+
     @Column(name = "role")
     private String role;
 
@@ -51,11 +54,12 @@ public class User {
   
     }
   
-    public User(String email, String name, String role, String password) {
+    public User(String email, String name, String role, String password, String orgName) {
       this.email = email;
       this.name = name;
       this.role = role;
       this.password = password;
+      this.orgName = orgName;
     }
   
     public long getId() {
@@ -76,6 +80,14 @@ public class User {
   
     public void setName(String name) {
       this.name = name;
+    }
+
+    public String getOrgName() {
+      return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+      this.orgName = orgName;
     }
 
     public String getRole() {

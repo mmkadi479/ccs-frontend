@@ -91,7 +91,7 @@ public class UserController {
           }
         }
         User _user = userRepository
-            .save(new User(user.getEmail(), user.getName(), user.getRole(), user.getPassword()));
+            .save(new User(user.getEmail(), user.getName(), user.getRole(), user.getPassword(), user.getOrgName()));
         return new ResponseEntity<>(_user, HttpStatus.CREATED);
       } catch (Exception e) {
         return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -167,16 +167,27 @@ public class UserController {
     }
 
     @PostMapping("/{id}/complaint-rooms")
-    public ResponseEntity<User> addComplaintRoomToUser(@PathVariable("id") long id, @RequestParam(required = true) String clientEmail) {
+    public ResponseEntity<ComplaintRoom> addComplaintRoomToUser(@PathVariable("id") long id, @RequestParam(required = true) String clientEmail, @RequestParam(required = false) Long productId) {
         Optional<User> userData = userRepository.findById(id);
 
         if (userData.isPresent()) {
             User _user = userData.get();
             Optional<Client> clientData = clientRepository.findByEmail(clientEmail);
+            
             if (clientData.isPresent()) {
+                if (productId != null) {
+                    Optional<Product> productData = productRepository.findById(productId);
+                    if (productData.isPresent()) {
+                        ComplaintRoom _complaintRoom = new ComplaintRoom("OPEN", _user, clientData.get());
+                        _complaintRoom.setProduct(productData.get());
+                        return new ResponseEntity<>(complaintRoomRepository.save(_complaintRoom), HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    }
+                }
                 ComplaintRoom _complaintRoom = new ComplaintRoom("OPEN", _user, clientData.get());
                 complaintRoomRepository.save(_complaintRoom);
-                return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+                return new ResponseEntity<>(complaintRoomRepository.save(_complaintRoom), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -261,6 +272,23 @@ public class UserController {
                 } else {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("{id}/complaint-rooms/{complaintRoomId}/info")
+    public ResponseEntity<ComplaintRoom> getUserComplaintRoomInfoById(@PathVariable("id") long id, @PathVariable("complaintRoomId") long complaintRoomId) {
+        Optional<User> userData = userRepository.findById(id);
+
+        if (userData.isPresent()) {
+            Optional<ComplaintRoom> complaintRoomData = complaintRoomRepository.findById(complaintRoomId);
+            if (complaintRoomData.isPresent()) {
+                ComplaintRoom _complaintRoom = complaintRoomData.get();
+                return new ResponseEntity<>(_complaintRoom, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
