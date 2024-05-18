@@ -38,11 +38,15 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "~/components/ui/toggle-group"
-import { useRouter } from "next/navigation"
-import { addProduct } from "~/server/actions/products"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Product, editProduct } from "~/server/actions/products"
 import { useState } from "react"
 
-export default function AddProductForm() {
+export default function EditProductForm({
+  product
+} : {
+  product: Product
+}) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -57,9 +61,9 @@ export default function AddProductForm() {
           const description = formData.get('description') as string
           const price = formData.get('price') as string
           const status = formData.get('status') as any
-          const product = { name, description, price, status }
-          console.log(product)
-          await addProduct(product)
+          const editedProduct = { name, description, price, status }
+          console.log(editedProduct)
+          await editProduct(editedProduct, product.id as number)
           router.push('/dashboard/products')
         } catch (error) {
           setError('An error occured. Please try again')
@@ -103,6 +107,7 @@ export default function AddProductForm() {
                           className="w-full"
                           placeholder="Product name..."
                           name="name"
+                          value={product.name}
                           required
                         />
                       </div>
@@ -114,6 +119,7 @@ export default function AddProductForm() {
                           className="w-full"
                           placeholder="Product name..."
                           name="price"
+                          value={product.price}
                           required
                         />
                       </div>
@@ -124,6 +130,7 @@ export default function AddProductForm() {
                           placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc."
                           className="min-h-32 resize-none"
                           name="description"
+                          value={product.description}
                           required
                         />
                       </div>
@@ -140,7 +147,7 @@ export default function AddProductForm() {
                     <div className="grid gap-6">
                       <div className="grid gap-3">
                         <Label htmlFor="status">Status</Label>
-                        <Select name="status" required>
+                        <Select name="status" defaultValue={product.status} required>
                           <SelectTrigger id="status" aria-label="Select status">
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>

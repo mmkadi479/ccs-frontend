@@ -41,6 +41,7 @@ import {
 import Link from "next/link"
 
 import { getProducts } from "~/server/actions/products"
+import DeleteProductButton from "~/app/_components/delete-product-button"
 
 export default async function Products() {
   const products = await getProducts()
@@ -118,8 +119,8 @@ export default async function Products() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                              <Link href={`/dashboard/products/edit?id=${product.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
+                              <DeleteProductButton id={product.id} />
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -183,8 +184,8 @@ export default async function Products() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                              <Link href={`/dashboard/products/edit?id=${product.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
+                              <DeleteProductButton id={product.id} />
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -248,8 +249,8 @@ export default async function Products() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
+                              <Link href={`/dashboard/products/edit?id=${product.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
+                              <DeleteProductButton id={product.id} />
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
