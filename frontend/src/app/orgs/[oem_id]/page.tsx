@@ -16,9 +16,11 @@ import { getOrg } from '~/server/actions/orgs'
 import { getProducts } from '~/server/actions/products'
 
 const Page = async ({
-  params
+  params,
+  searchParams
 } : {
-  params: any
+  params: any,
+  searchParams: any
 }) => {
 
   // validate params
@@ -39,6 +41,8 @@ const Page = async ({
   const orgId = parseInt(oem_id)
 
   const org = await getOrg(orgId)
+
+  const client_email = searchParams['email']
 
   if (!org) {
     return (
@@ -63,7 +67,7 @@ const Page = async ({
               <p>{product.description}</p>
             </CardContent>
             <CardFooter>
-              <Link href={`/orgs/${orgId}/chat?product=${product.id}`}>
+              <Link href={`/orgs/${orgId}/chat?product=${product.id}${client_email ? `&email=${client_email}` : ''}`}>
                 <Button variant="link" className='p-0 text-slate-300'>
                   <MessageCircleQuestion size={32} />
                 </Button>

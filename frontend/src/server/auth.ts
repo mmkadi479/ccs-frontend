@@ -36,7 +36,7 @@ declare module "next-auth" {
     user: {
       id: number;
       // ...other properties
-      // role: UserRole;
+      role: string;
     } & DefaultSession["user"];
   }
 
@@ -53,13 +53,16 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...(token.user as User),
-        id: token.sub,
-      },
-    }),
+    session: ({ session, token }) => {
+      console.log("here in session side", token.user);
+      return {
+        ...session,
+        user: {
+          ...(token.user as any),
+          id: token.sub,
+        },
+      }
+    },
 
     jwt: ({ token, user }) => {
       console.log("here in token side", user);
@@ -69,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         token.user = user;
       }
 
-      return token;
+      return token as any;
     }
   },
   // adapter: DrizzleAdapter(db, createTable) as Adapter,

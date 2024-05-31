@@ -48,7 +48,7 @@ export default function SideNav() {
             </TooltipTrigger>
             <TooltipContent side="right">Dashboard</TooltipContent>
           </Tooltip>
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <Link
                 href="/dashboard/chats"
@@ -77,7 +77,7 @@ export default function SideNav() {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Products</TooltipContent>
-          </Tooltip>
+          </Tooltip> */}
           {/* <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -94,7 +94,7 @@ export default function SideNav() {
             <TooltipContent side="right">Analytics</TooltipContent>
           </Tooltip> */}
         </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+        {/* <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -110,7 +110,7 @@ export default function SideNav() {
             </TooltipTrigger>
             <TooltipContent side="right">Settings</TooltipContent>
           </Tooltip>
-        </nav>
+        </nav> */}
       </aside>
     )
 }

@@ -65,7 +65,7 @@ export default function Header() {
                   <Home className="h-5 w-5" />
                   Dashboard
                 </Link>
-                <Link
+                {/* <Link
                   href="/dashboard/chats"
                   className={clsx("flex items-center gap-4 px-2.5 hover:text-foreground", {
                     "text-foreground": pathname.includes("chats"),
@@ -94,7 +94,7 @@ export default function Header() {
                 >
                   <Settings className="h-5 w-5" />
                   Settings
-                </Link>
+                </Link> */}
               </nav>
             </SheetContent>
           </Sheet>
@@ -105,7 +105,8 @@ export default function Header() {
               placeholder="Search..."
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             /> */}
-            {(session.data as any).user.orgName}: <a className="text-blue-400 underline" href={`/orgs/${session?.data?.user.id}`} target="__blank">Your Public Link</a>
+            {(session.data as any).user.role == 'org' ? (session.data as any).user.orgName : (session.data as any).user.name}
+            {/* <p>se</p> */}
           </div>
           <div className="ml-auto"></div>
           <DropdownMenu>

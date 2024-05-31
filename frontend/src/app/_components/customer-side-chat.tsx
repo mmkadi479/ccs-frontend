@@ -15,6 +15,7 @@ import {
   CardContent,
   CardFooter
 } from "~/components/ui/card"
+import Link from "next/link"
 
 export default function CustomerSideChat({
   roomInfo,
@@ -57,9 +58,10 @@ export default function CustomerSideChat({
         </div>
       </header>
       <main className="flex-1 bg-gray-100 dark:bg-gray-800 p-4">
+      <Link href={`/orgs/${(params as any).oem_id}?email=${searchParams.get('email')}`} className="text-blue-300 underline">&lt; Products</Link>
         {
           roomInfo.product &&
-          <Card className="mb-4 w-[350px] flex flex-col justify-between">
+          <Card className="mt-4 mb-4 w-[350px] flex flex-col justify-between">
             <CardHeader>
               <CardTitle>{roomInfo.product.name}</CardTitle>
               <CardDescription>{Number(roomInfo.product.price).toLocaleString()}</CardDescription>
