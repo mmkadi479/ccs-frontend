@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ccs.backend.enums.EventRequestStatus;
 import com.ccs.backend.model.Client;
 import com.ccs.backend.model.ComplaintMessage;
 import com.ccs.backend.model.ComplaintRoom;
+import com.ccs.backend.model.EventPackageTier;
+import com.ccs.backend.model.EventRequest;
 import com.ccs.backend.model.Product;
 import com.ccs.backend.model.User;
 import com.ccs.backend.repository.ClientRepository;
@@ -28,6 +31,8 @@ import com.ccs.backend.repository.ComplaintMessageRepository;
 import com.ccs.backend.repository.ComplaintRoomRepository;
 import com.ccs.backend.repository.ProductRepository;
 import com.ccs.backend.repository.UserRepository;
+import com.ccs.backend.repository.EventRequestRepository;
+import com.ccs.backend.repository.EventPackageTierRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -47,6 +52,12 @@ public class UserController {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    EventRequestRepository eventRequestRepository;
+
+    @Autowired
+    EventPackageTierRepository eventPackageTierRepository;
 
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String email) {
@@ -471,4 +482,140 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/event-requests")
+    public EventRequest postMethodName(@RequestBody EventRequest eventRequest, @RequestParam(required = true) Long userId) {
+        Optional<User> userData = userRepository.findById(userId);
+        if (userData.isPresent()) {
+            eventRequest.setUser(userData.get());
+            return eventRequestRepository.save(eventRequest);
+        }
+        return null;
+    }
+
+    @GetMapping("/event-requests")
+    public List<EventRequest> getEventRequests(@RequestParam(required = false) Long userId) {
+        if (userId != null) {
+            Optional<User> userData = userRepository.findById(userId);
+            if (userData.isPresent()) {
+                return userData.get().getEvents();
+            } else {
+                return new ArrayList<EventRequest>();
+            }
+        }
+        return eventRequestRepository.findAll();
+    }
+
+    @GetMapping("/event-requests/{id}")
+    public EventRequest getEventRequest(@PathVariable("id") Long id) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            return eventRequestData.get();
+        }
+        return null;
+    }
+
+    @PutMapping("/event-requests/{id}")
+    public EventRequest updateEventRequest(@PathVariable("id") Long id, @RequestBody EventRequest eventRequest) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            EventRequest _eventRequest = eventRequestData.get();
+            _eventRequest.setDate(eventRequest.getDate());
+            _eventRequest.setLocation(eventRequest.getLocation());
+            _eventRequest.setNo_drinks(eventRequest.getNo_drinks());
+            _eventRequest.setNo_guests(eventRequest.getNo_guests());
+            _eventRequest.setSize(eventRequest.getSize());
+            _eventRequest.setStatus(eventRequest.getStatus());
+            _eventRequest.setTheme(eventRequest.getTheme());
+            return eventRequestRepository.save(_eventRequest);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/event-requests/{id}")
+    public void deleteEventRequest(@PathVariable("id") Long id) {
+        eventRequestRepository.deleteById(id);
+    }
+
+    @PostMapping("/event-requests/{id}/select-tier")
+    public EventRequest selectEventRequestTier(@PathVariable("id") Long id, @RequestParam(required = true) Long tierId) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        Optional<EventPackageTier> eventPackageTierData = eventPackageTierRepository.findById(tierId);
+        if (eventRequestData.isPresent() && eventPackageTierData.isPresent()) {
+            EventRequest _eventRequest = eventRequestData.get();
+            _eventRequest.setSelectedTier(eventPackageTierData.get());
+            _eventRequest.setStatus(EventRequestStatus.APPROVED);
+            return eventRequestRepository.save(_eventRequest);
+        }
+        return null;
+    }
+
+    @PostMapping("/event-requests/{id}/decline-event")
+    public EventRequest declineEventRequest(@PathVariable("id") Long id) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            EventRequest _eventRequest = eventRequestData.get();
+            _eventRequest.setStatus(EventRequestStatus.REJECTED);
+            return eventRequestRepository.save(_eventRequest);
+        }
+        return null;
+    }
+    
+
+    @GetMapping("/event-requests/{id}/tiers")
+    public List<EventPackageTier> getEventRequestTiers(@PathVariable("id") Long id) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            return eventRequestData.get().getTiers();
+        }
+        return new ArrayList<EventPackageTier>();
+    }
+
+    @PostMapping("/event-requests/{id}/tiers")
+    public EventPackageTier postMethodName(@PathVariable("id") Long id, @RequestBody EventPackageTier eventPackageTier) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            eventPackageTier.setEvent(eventRequestData.get());
+            return eventPackageTierRepository.save(eventPackageTier);
+        }
+        return null;
+    }
+
+    @GetMapping("/event-requests/{id}/tiers/{tierId}")
+    public EventPackageTier getEventRequestTier(@PathVariable("id") Long id, @PathVariable("tierId") Long tierId) {
+        Optional<EventPackageTier> eventPackageTierData = eventPackageTierRepository.findById(tierId);
+        if (eventPackageTierData.isPresent()) {
+            return eventPackageTierData.get();
+        }
+        return null;
+    }
+
+    @PutMapping("/event-requests/{id}/tiers/{tierId}")
+    public EventPackageTier updateEventRequestTier(@PathVariable("id") Long id, @PathVariable("tierId") Long tierId, @RequestBody EventPackageTier eventPackageTier) {
+        Optional<EventPackageTier> eventPackageTierData = eventPackageTierRepository.findById(tierId);
+        if (eventPackageTierData.isPresent()) {
+            EventPackageTier _eventPackageTier = eventPackageTierData.get();
+            _eventPackageTier.setPrice(eventPackageTier.getPrice());
+            _eventPackageTier.setType(eventPackageTier.getType());
+            return eventPackageTierRepository.save(_eventPackageTier);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/event-requests/{id}/tiers/{tierId}")
+    public void deleteEventRequestTier(@PathVariable("id") Long id, @PathVariable("tierId") Long tierId) {
+        eventPackageTierRepository.deleteById(tierId);
+    }
+
+    @DeleteMapping("/event-requests/{id}/tiers")
+    public void deleteEventRequestTiers(@PathVariable("id") Long id) {
+        Optional<EventRequest> eventRequestData = eventRequestRepository.findById(id);
+        if (eventRequestData.isPresent()) {
+            List<EventPackageTier> eventPackageTiers = eventRequestData.get().getTiers();
+            for (EventPackageTier eventPackageTier : eventPackageTiers) {
+                eventPackageTierRepository.deleteById(eventPackageTier.getId());
+            }
+        }
+    }
+    
 }

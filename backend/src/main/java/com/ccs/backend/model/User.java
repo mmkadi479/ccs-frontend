@@ -49,6 +49,10 @@ public class User {
     @OneToMany(mappedBy = "orgUser")
     @JsonIgnore
     private List<Product> products;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<EventRequest> events;
   
     public User() {
   
@@ -129,6 +133,10 @@ public class User {
 
     public List<Product> getProducts() {
       return products;
+    }
+
+    public List<EventRequest> getEvents() {
+      return events;
     }
   
     @Override
